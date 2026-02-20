@@ -5,7 +5,7 @@ import { readFileSync } from 'fs'
 import { resolve, dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { Room } from './Room.js'
-import type { QuizData, ClientJoinPayload, ClientAnswerPayload, HostStartPayload, HostNextPayload } from '../shared/types'
+import type { QuizData, ClientJoinPayload, ClientAnswerPayload, HostCreatePayload, HostStartPayload, HostNextPayload } from '../shared/types'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -39,9 +39,10 @@ io.on('connection', (socket) => {
   console.log(`[connect] ${socket.id}`)
 
   // Host creates a room
-  socket.on('host:create', () => {
+  socket.on('host:create', (payload: HostCreatePayload = {}) => {
     const roomCode = generateRoomCode()
-    const room = new Room(io, roomCode, socket.id, [...quizData.questions])
+    const questions = payload.limit ? quizData.questions.slice(0, payload.limit) : quizData.questions
+    const room = new Room(io, roomCode, socket.id, [...questions])
     rooms.set(roomCode, room)
     socketToRoom.set(socket.id, roomCode)
     socket.join(roomCode)

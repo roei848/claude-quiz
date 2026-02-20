@@ -68,6 +68,10 @@ export interface AnswerFeedback {
 }
 
 // Socket event payloads
+export interface HostCreatePayload {
+  limit?: number;
+}
+
 export interface ClientJoinPayload {
   roomCode: string;
   nickname: string;

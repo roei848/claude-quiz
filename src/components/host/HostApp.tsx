@@ -25,7 +25,8 @@ export default function HostApp() {
 
   useEffect(() => {
     socket.connect()
-    socket.emit('host:create')
+    const limit = new URLSearchParams(window.location.search).get('q')
+    socket.emit('host:create', limit ? { limit: Number(limit) } : {})
 
     socket.on('room:created', (data: { roomCode: string }) => {
       setRoomCode(data.roomCode)
