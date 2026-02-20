@@ -966,6 +966,15 @@ body::after {
   width: 100%;
   text-align: center;
   animation: fadeSlideUp 0.6s ease forwards;
+  position: relative;
+  padding: 24px;
+}
+
+.host-final-confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
 }
 
 .host-final-label {
@@ -973,76 +982,128 @@ body::after {
   color: var(--text-muted);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  margin-bottom: 24px;
+  margin-bottom: 48px;
 }
 
-.host-final-winner {
+/* Podium stage: #2 left, #1 center, #3 right */
+.host-final-podium-stage {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
   margin-bottom: 40px;
-  animation: fadeSlideUp 0.6s 0.2s ease both;
+  min-height: 320px;
 }
 
-.host-final-winner-tag {
-  font-size: 12px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  margin-bottom: 8px;
+/* Each slot = name/score above + block below */
+.host-final-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 160px;
 }
 
-.host-final-winner-name {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(32px, 8vw, 56px);
+/* Name + score above the block — hidden until revealed */
+.host-final-slot-name,
+.host-final-slot-score {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  margin-bottom: 4px;
+}
+
+.host-final-slot.revealed .host-final-slot-name,
+.host-final-slot.revealed .host-final-slot-score {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.host-final-slot-name {
+  font-size: 14px;
+  color: var(--text-primary);
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+  transition-delay: 0.3s;
+}
+
+.host-final-slot-score {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  transition-delay: 0.4s;
+}
+
+.host-final-slot-name-1 {
+  font-size: 20px;
   background: linear-gradient(135deg, var(--cyan) 0%, var(--green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5));
-  margin-bottom: 8px;
+  filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.6));
 }
 
-.host-final-winner-score {
-  font-size: 20px;
+.host-final-slot-score-1 {
+  font-size: 15px;
   color: var(--green);
 }
 
-.host-final-podium {
+/* The rising block */
+.host-final-block {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 24px;
-}
-
-.host-final-podium-entry {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 24px;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 16px;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-top: 2px solid var(--border);
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  animation: fadeSlideUp 0.4s ease both;
 }
 
-.host-final-podium-1 {
-  border-color: var(--cyan);
-  box-shadow: var(--glow-cyan);
-  animation-delay: 0.1s;
+.host-final-slot.revealed .host-final-block {
+  transform: scaleY(1);
 }
 
-.host-final-podium-2 {
-  animation-delay: 0.2s;
+.host-final-block-rank {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 18px;
 }
 
-.host-final-podium-3 {
-  animation-delay: 0.3s;
+/* Block heights */
+.host-final-block-1 {
+  height: 180px;
+  border-color: #ffd700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 60px rgba(255, 215, 0, 0.1);
 }
+.host-final-block-1 .host-final-block-rank { color: #ffd700; }
 
+.host-final-block-2 {
+  height: 130px;
+  border-color: #b0b8c8;
+  box-shadow: 0 0 20px rgba(176, 184, 200, 0.2);
+}
+.host-final-block-2 .host-final-block-rank { color: #b0b8c8; }
+
+.host-final-block-3 {
+  height: 90px;
+  border-color: #cd7f32;
+  box-shadow: 0 0 20px rgba(205, 127, 50, 0.2);
+}
+.host-final-block-3 .host-final-block-rank { color: #cd7f32; }
+
+/* Rest of leaderboard */
 .host-final-rest {
   display: flex;
   flex-direction: column;
   gap: 4px;
   margin-bottom: 32px;
   opacity: 0.7;
+  animation: fadeSlideUp 0.5s ease forwards;
 }
 
 /* ── CLIENT APP ── */
