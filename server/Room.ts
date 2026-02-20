@@ -8,7 +8,10 @@ import type {
   RevealData,
   LeaderboardEntry,
   AnswerFeedback,
+  RejoinState,
 } from '../shared/types'
+
+const REJOIN_GRACE_MS = 30_000
 
 interface Player {
   id: string
@@ -16,6 +19,9 @@ interface Player {
   score: number
   currentAnswer: AnswerKey | null
   answerTime: number | null
+  connected: boolean
+  lastFeedback?: AnswerFeedback
+  disconnectTimer?: ReturnType<typeof setTimeout>
 }
 
 const TIME_PER_QUESTION = 20 // seconds
@@ -75,6 +81,7 @@ export class Room {
       score: 0,
       currentAnswer: null,
       answerTime: null,
+      connected: true,
     })
 
     this.io.to(this.hostSocketId).emit('room:playerJoined', {
@@ -94,6 +101,83 @@ export class Room {
     if (this.phase === 'question' && this.allAnswered()) {
       this.endQuestion()
     }
+  }
+
+  markDisconnected(socketId: string) {
+    const player = this.players.get(socketId)
+    if (!player) return
+
+    player.connected = false
+
+    this.io.to(this.hostSocketId).emit('room:playerLeft', {
+      players: this.getPublicPlayers(),
+    })
+
+    // If all remaining connected players answered, end question early
+    if (this.phase === 'question' && this.allAnswered()) {
+      this.endQuestion()
+    }
+
+    // Permanently remove after grace period if they don't rejoin
+    player.disconnectTimer = setTimeout(() => {
+      this.players.delete(socketId)
+      this.io.to(this.hostSocketId).emit('room:playerLeft', {
+        players: this.getPublicPlayers(),
+      })
+    }, REJOIN_GRACE_MS)
+  }
+
+  rejoinPlayer(newSocketId: string, nickname: string): { success: boolean; error?: string; state?: RejoinState } {
+    // Find a disconnected player with this nickname
+    let found: Player | null = null
+    let oldSocketId: string | null = null
+    for (const [sid, p] of this.players.entries()) {
+      if (p.nickname.toLowerCase() === nickname.toLowerCase() && !p.connected) {
+        found = p
+        oldSocketId = sid
+        break
+      }
+    }
+
+    if (!found || !oldSocketId) {
+      return { success: false, error: 'No disconnected session found for this nickname' }
+    }
+
+    // Cancel grace-period removal timer
+    clearTimeout(found.disconnectTimer)
+    found.disconnectTimer = undefined
+
+    // Re-key the player under the new socket ID
+    this.players.delete(oldSocketId)
+    found.id = newSocketId
+    found.connected = true
+    this.players.set(newSocketId, found)
+
+    const state: RejoinState = {
+      phase: this.phase,
+      roomCode: this.roomCode,
+      nickname: found.nickname,
+      lastFeedback: found.lastFeedback,
+    }
+
+    if (this.phase === 'question') {
+      state.questionNumber = this.currentQuestionIndex + 1
+      state.totalQuestions = this.questions.length
+      state.timeRemaining = this.timeRemaining
+      state.alreadyAnswered = found.currentAnswer !== null
+    }
+
+    if (this.phase === 'finished') {
+      const leaderboard = this.getLeaderboard()
+      const entry = leaderboard.find(e => e.nickname === found!.nickname)
+      state.finalResult = {
+        rank: entry?.rank ?? 0,
+        score: found.score,
+        totalPlayers: this.players.size,
+      }
+    }
+
+    return { success: true, state }
   }
 
   startGame() {
@@ -178,17 +262,15 @@ export class Room {
   private getAnsweredCount(): number {
     let count = 0
     for (const p of this.players.values()) {
-      if (p.currentAnswer !== null) count++
+      if (p.connected && p.currentAnswer !== null) count++
     }
     return count
   }
 
   private allAnswered(): boolean {
-    if (this.players.size === 0) return false
-    for (const p of this.players.values()) {
-      if (p.currentAnswer === null) return false
-    }
-    return true
+    const connected = Array.from(this.players.values()).filter(p => p.connected)
+    if (connected.length === 0) return false
+    return connected.every(p => p.currentAnswer !== null)
   }
 
   private endQuestion() {
@@ -251,6 +333,7 @@ export class Room {
         totalPlayers: this.players.size,
         correctAnswer: q.correct,
       }
+      player.lastFeedback = feedback
       this.io.to(player.id).emit('client:feedback', feedback)
     }
   }

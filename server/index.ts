@@ -5,7 +5,7 @@ import { readFileSync } from 'fs'
 import { resolve, dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { Room } from './Room.js'
-import type { QuizData, ClientJoinPayload, ClientAnswerPayload, HostCreatePayload, HostStartPayload, HostNextPayload } from '../shared/types'
+import type { QuizData, ClientJoinPayload, ClientAnswerPayload, ClientRejoinPayload, HostCreatePayload, HostStartPayload, HostNextPayload } from '../shared/types'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -96,6 +96,26 @@ io.on('connection', (socket) => {
     room.submitAnswer(socket.id, payload.answer)
   })
 
+  // Client rejoins after refresh
+  socket.on('client:rejoin', (payload: ClientRejoinPayload) => {
+    const room = rooms.get(payload.roomCode)
+    if (!room) {
+      socket.emit('error', { message: 'Room not found' })
+      return
+    }
+
+    const result = room.rejoinPlayer(socket.id, payload.nickname)
+    if (!result.success) {
+      socket.emit('error', { message: result.error })
+      return
+    }
+
+    socketToRoom.set(socket.id, payload.roomCode)
+    socket.join(payload.roomCode)
+    socket.emit('client:rejoined', result.state)
+    console.log(`[client:rejoined] ${payload.nickname} in ${payload.roomCode}`)
+  })
+
   // Disconnect handling
   socket.on('disconnect', () => {
     console.log(`[disconnect] ${socket.id}`)
@@ -115,7 +135,7 @@ io.on('connection', (socket) => {
       }
       rooms.delete(roomCode)
     } else {
-      room.removePlayer(socket.id)
+      room.markDisconnected(socket.id)
     }
 
     socketToRoom.delete(socket.id)

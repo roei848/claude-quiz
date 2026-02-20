@@ -89,3 +89,20 @@ export interface HostStartPayload {
 export interface HostNextPayload {
   roomCode: string;
 }
+
+export interface ClientRejoinPayload {
+  roomCode: string;
+  nickname: string;
+}
+
+export interface RejoinState {
+  phase: GamePhase;
+  roomCode: string;
+  nickname: string;
+  lastFeedback?: AnswerFeedback;
+  questionNumber?: number;
+  totalQuestions?: number;
+  timeRemaining?: number;
+  alreadyAnswered?: boolean;
+  finalResult?: { rank: number; score: number; totalPlayers: number };
+}
