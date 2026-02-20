@@ -2,7 +2,7 @@ import express from 'express'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { readFileSync } from 'fs'
-import { resolve, dirname } from 'path'
+import { resolve, dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { Room } from './Room.js'
 import type { QuizData, ClientJoinPayload, ClientAnswerPayload, HostStartPayload, HostNextPayload } from '../shared/types'
@@ -121,7 +121,14 @@ io.on('connection', (socket) => {
   })
 })
 
-const PORT = 3001
+// Serve the React frontend build in production
+app.use(express.static(join(__dirname, '..', 'dist')))
+// SPA fallback: React Router handles client-side routes
+app.get('*', (_req, res) => {
+  res.sendFile(join(__dirname, '..', 'dist', 'index.html'))
+})
+
+const PORT = Number(process.env.PORT) || 3001
 httpServer.listen(PORT, () => {
   console.log(`Quiz server running on http://localhost:${PORT}`)
 })
