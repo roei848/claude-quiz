@@ -76,8 +76,8 @@ body::after {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 700px;
-  padding: 24px 20px;
+  max-width: 1200px;
+  padding: 48px 48px;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@ body::after {
 }
 
 .start-logo {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--cyan);
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -115,7 +115,7 @@ body::after {
 
 .start-title {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(28px, 6vw, 48px);
+  font-size: clamp(40px, 6vw, 72px);
   font-weight: 700;
   line-height: 1.1;
   margin-bottom: 8px;
@@ -128,10 +128,10 @@ body::after {
 }
 
 .start-subtitle {
-  font-size: 13px;
+  font-size: 18px;
   color: var(--text-secondary);
   letter-spacing: 0.05em;
-  margin-bottom: 48px;
+  margin-bottom: 64px;
 }
 
 .start-stats {
@@ -272,8 +272,8 @@ body::after {
 .question-panel {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  padding: 32px;
-  margin-bottom: 24px;
+  padding: 56px;
+  margin-bottom: 40px;
   position: relative;
 }
 
@@ -292,7 +292,7 @@ body::after {
 
 .question-text {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(15px, 2.5vw, 18px);
+  font-size: clamp(20px, 2.5vw, 28px);
   font-weight: 400;
   line-height: 1.6;
   color: var(--text-primary);
@@ -301,8 +301,8 @@ body::after {
 .answers-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 20px;
+  margin-bottom: 32px;
 }
 
 @media (max-width: 500px) {
@@ -313,14 +313,14 @@ body::after {
 
 .answer-btn {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
-  padding: 16px;
+  padding: 28px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   color: var(--text-primary);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-size: 18px;
   line-height: 1.5;
   text-align: left;
   cursor: pointer;
@@ -335,13 +335,13 @@ body::after {
 
 .answer-key {
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--border-bright);
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -578,9 +578,9 @@ body::after {
 /* ── MODE SELECT ── */
 .mode-buttons {
   display: flex;
-  gap: 16px;
+  gap: 24px;
   justify-content: center;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
 }
 
 @media (max-width: 500px) {
@@ -594,15 +594,15 @@ body::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 32px 40px;
+  gap: 16px;
+  padding: 56px 72px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   color: var(--text-primary);
   font-family: 'JetBrains Mono', monospace;
   cursor: pointer;
   transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
-  min-width: 200px;
+  min-width: 300px;
 }
 
 .btn-mode:hover {
@@ -620,7 +620,7 @@ body::after {
 }
 
 .mode-icon {
-  font-size: 32px;
+  font-size: 56px;
   font-weight: 700;
   color: var(--cyan);
   line-height: 1;
@@ -631,14 +631,14 @@ body::after {
 }
 
 .mode-label {
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .mode-desc {
-  font-size: 11px;
+  font-size: 15px;
   color: var(--text-muted);
   letter-spacing: 0.05em;
 }
@@ -647,12 +647,12 @@ body::after {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 24px;
+  padding: 14px 32px;
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-muted);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 0.1em;
   cursor: pointer;
   transition: color 0.3s, border-color 0.3s;
@@ -665,7 +665,7 @@ body::after {
 
 /* ── HOST APP ── */
 .host-app {
-  max-width: 900px;
+  max-width: 1200px;
 }
 
 /* ── HOST LOBBY ── */
@@ -906,25 +906,25 @@ body::after {
 }
 
 .host-leaderboard-label {
-  font-size: 11px;
+  font-size: 16px;
   color: var(--text-muted);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
 }
 
 .host-leaderboard-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 32px;
+  gap: 16px;
+  margin-bottom: 48px;
 }
 
 .host-leaderboard-entry {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 24px;
+  gap: 24px;
+  padding: 28px 40px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   animation: fadeSlideUp 0.4s ease both;
@@ -937,10 +937,10 @@ body::after {
 
 .host-leaderboard-rank {
   font-family: 'Space Mono', monospace;
-  font-size: 18px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--cyan);
-  min-width: 40px;
+  min-width: 60px;
 }
 
 .host-leaderboard-first .host-leaderboard-rank {
@@ -949,14 +949,14 @@ body::after {
 
 .host-leaderboard-name {
   flex: 1;
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 500;
   text-align: left;
 }
 
 .host-leaderboard-score {
   font-family: 'Space Mono', monospace;
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--green);
 }
@@ -978,11 +978,11 @@ body::after {
 }
 
 .host-final-label {
-  font-size: 11px;
+  font-size: 16px;
   color: var(--text-muted);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  margin-bottom: 48px;
+  margin-bottom: 64px;
 }
 
 /* Podium stage: #2 left, #1 center, #3 right */
@@ -990,9 +990,9 @@ body::after {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 40px;
-  min-height: 320px;
+  gap: 16px;
+  margin-bottom: 56px;
+  min-height: 480px;
 }
 
 /* Each slot = name/score above + block below */
@@ -1000,7 +1000,7 @@ body::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 160px;
+  width: 240px;
 }
 
 /* Name + score above the block — hidden until revealed */
@@ -1019,25 +1019,25 @@ body::after {
 }
 
 .host-final-slot-name {
-  font-size: 14px;
+  font-size: 22px;
   color: var(--text-primary);
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 140px;
+  max-width: 220px;
   transition-delay: 0.3s;
 }
 
 .host-final-slot-score {
-  font-size: 12px;
+  font-size: 18px;
   color: var(--text-secondary);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   transition-delay: 0.4s;
 }
 
 .host-final-slot-name-1 {
-  font-size: 20px;
+  font-size: 30px;
   background: linear-gradient(135deg, var(--cyan) 0%, var(--green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1046,7 +1046,7 @@ body::after {
 }
 
 .host-final-slot-score-1 {
-  font-size: 15px;
+  font-size: 22px;
   color: var(--green);
 }
 
@@ -1071,26 +1071,26 @@ body::after {
 .host-final-block-rank {
   font-family: 'Space Mono', monospace;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 28px;
 }
 
 /* Block heights */
 .host-final-block-1 {
-  height: 180px;
+  height: 280px;
   border-color: #ffd700;
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 60px rgba(255, 215, 0, 0.1);
 }
 .host-final-block-1 .host-final-block-rank { color: #ffd700; }
 
 .host-final-block-2 {
-  height: 130px;
+  height: 200px;
   border-color: #b0b8c8;
   box-shadow: 0 0 20px rgba(176, 184, 200, 0.2);
 }
 .host-final-block-2 .host-final-block-rank { color: #b0b8c8; }
 
 .host-final-block-3 {
-  height: 90px;
+  height: 140px;
   border-color: #cd7f32;
   box-shadow: 0 0 20px rgba(205, 127, 50, 0.2);
 }
